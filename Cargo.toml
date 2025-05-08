@@ -1,0 +1,19 @@
+[package]
+name = "unsealer"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = "0"
+sodiumoxide = "0"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+base64 = "0"
+clap = { version = "4", features = ["derive", "env"] }
+tower-http = {  version="0", features = ["timeout"] }
+anyhow = "1"
+tokio-util = "0"
+serde_json = "1"
+
+[build-dependencies]
+vergen-git2 = "1"
