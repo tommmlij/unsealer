@@ -1,13 +1,22 @@
-FROM python:3.12-slim AS unsealer
+FROM rust:alpine AS builder
+WORKDIR /app
 
-WORKDIR /opt/unseal
+RUN apk add --no-cache musl-dev build-base libsodium-dev
 
-COPY src/run.py src/requirements.txt /opt/unseal/
+RUN rustup target add x86_64-unknown-linux-musl
 
-RUN  pip install --upgrade pip \
- && pip install --no-cache-dir virtualenv \
- && virtualenv /opt/unseal --copies \
- && /opt/unseal/bin/pip install --upgrade pip \
- && /opt/unseal/bin/pip install -r requirements.txt
+# Copy only necessary files first to cache dependencies
+COPY Cargo.toml Cargo.lock ./
+RUN mkdir src && echo 'fn main() {}' > src/main.rs
+RUN cargo fetch --locked
 
-CMD ["/opt/unseal/bin/python", "run.py"]
+COPY src ./src
+
+RUN cargo build --release --target x86_64-unknown-linux-musl
+RUN ls -lisaR
+
+# Stage 2: Minimal runtime
+FROM alpine
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/unsealer /opt/unsealer/
+
+ENTRYPOINT ["ash"]

@@ -6,29 +6,27 @@ This project provides a lightweight Axum-based HTTP server designed to **securel
 
 ## 🚀 How It Works
 
-1. The unsealer exposes a single endpoint: `POST /init`
+1. The unsealer exposes two endpoints: `POST /init` and a health route `GET /health` 
 2. You send a **NaCl-encrypted payload** as base64url via the `config` field in a JSON body.
 3. The server decrypts the payload using its private key and your public key.
-4. It spawns the target service, either:
-    - passing the decoded JSON as a **base64-encoded argument**, or
-    - setting individual keys as **environment variables** (`format=env`)
+4. It spawns the target service setting individual keys as **environment variables**
 
 ---
 
 ## 📦 Environment Variables
 
-| Variable              | Description                                                |
-|-----------------------|------------------------------------------------------------|
-| `PORT`                | Port to bind the HTTP server (default: `3000`)             |
-| `SERVER_PRIVATE_KEY`  | Base64-encoded NaCl private key of the unsealer            |
-| `UNSEAL_PUBLIC_KEY`   | Base64-encoded NaCl public key of the trusted client       |
-| `COMMAND`             | Command to run (e.g. `./service`) after successful unseal  |
+| Variable             | Description                                                                                 |
+|----------------------|---------------------------------------------------------------------------------------------|
+| `PORT`               | Port to bind the HTTP server (default: `3000`)                                              |
+| `SERVER_PRIVATE_KEY` | Base64-encoded NaCl private key of the unsealer                                             |
+| `MANAGER_PUBLIC_KEY` | Base64-encoded NaCl public key of the client who wants to unseal                            |
+| `COMMAND`            | Command to run (e.g. `npm run dev` or `echo ${SECRET_HELLO_WORLD}`) after successful unseal |
 
 ---
 
 ## 🧾 Request Format
 
-**Endpoint**: `POST /init?format=json|env`  
+**Endpoint**: `POST /init`  
 **Content-Type**: `application/json`
 
 ```json
