@@ -10,10 +10,11 @@ tokio = { version = "1", features = ["full"] }
 serde = { version = "1", features = ["derive"] }
 base64 = "0"
 clap = { version = "4", features = ["derive", "env"] }
-tower-http = {  version="0", features = ["timeout"] }
+tower-http = {  version="0", features = ["timeout", "limit"] }
 anyhow = "1"
 tokio-util = "0"
 serde_json = "1"
+tower_governor = "0.7.0"
 
 [build-dependencies]
 vergen-git2 = "1"

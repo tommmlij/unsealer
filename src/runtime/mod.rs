@@ -13,7 +13,7 @@ fn json_to_uppercase_hashmap(json_str: Option<String>) -> HashMap<String, String
         .collect()
 }
 
-pub async fn run(config: Option<String>, executable_path: String) -> anyhow::Result<()>  {
+pub async fn run(config: Option<String>, command: String) -> anyhow::Result<()>  {
 
     let env_map = json_to_uppercase_hashmap(config);
     
@@ -38,7 +38,7 @@ pub async fn run(config: Option<String>, executable_path: String) -> anyhow::Res
                 let mut child = Command::new("cmd")
                     .envs(env_map.clone())
                     .arg("/C")
-                    .arg(executable_path.clone())
+                    .arg(command.clone())
                     .creation_flags(DETACH_FLAGS)
                     .spawn()?;
 
@@ -46,7 +46,7 @@ pub async fn run(config: Option<String>, executable_path: String) -> anyhow::Res
                 let mut child = Command::new("sh")
                     .envs(env_map.clone())
                     .arg("-c")
-                    .arg(executable_path.clone())
+                    .arg(command.clone())
                     .spawn()?;
 
                 let status = child.wait().await?;

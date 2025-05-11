@@ -10,13 +10,14 @@ COPY Cargo.toml Cargo.lock ./
 RUN mkdir src && echo 'fn main() {}' > src/main.rs
 RUN cargo fetch --locked
 
+
 COPY src ./src
 
 RUN cargo build --release --target x86_64-unknown-linux-musl
 RUN ls -lisaR
 
-# Stage 2: Minimal runtime
-FROM alpine
+
+FROM scratch
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/unsealer /opt/unsealer/
 
-ENTRYPOINT ["ash"]
+ENTRYPOINT ["/opt/unsealer/unsealer"]

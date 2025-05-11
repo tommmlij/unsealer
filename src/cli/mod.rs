@@ -15,8 +15,8 @@ pub fn get_version() -> &'static str {
     option_env!("VERGEN_GIT_DESCRIBE").unwrap_or("No Version")
 }
 
-type SecretKeyValue = Base64Key<SecretKey, SECRETKEYBYTES>;
-type PublicKeyValue = Base64Key<PublicKey, PUBLICKEYBYTES>;
+pub type SecretKeyValue = Base64Key<SecretKey, SECRETKEYBYTES>;
+pub type PublicKeyValue = Base64Key<PublicKey, PUBLICKEYBYTES>;
 
 #[derive(Parser, Clone, Debug)]
 #[command(version=get_version())]
@@ -30,6 +30,6 @@ pub struct Cli {
     #[clap(short, long, env = "MANAGER_PUBLIC_KEY")]
     pub manager_public_key: PublicKeyValue,
 
-    #[clap(short, long, env = "EXECUTABLE_PATH")]
-    pub executable_path: String,
+    #[clap(short, long, env = "COMMAND")]
+    pub command: String,
 }
